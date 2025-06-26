@@ -1,8 +1,8 @@
 "use client"
 import { useState, useEffect } from 'react'
 import ProfilePhoto from './ProfilePhoto'
-import AnimatedLine from './AnimatedLine'
-import ScrollIndicator from './ScrollIndicator'
+import AnimatedLine from '../AnimatedLine'
+import ScrollIndicator from '../ScrollIndicator'
 import { Orbitron, Space_Grotesk } from 'next/font/google'
 
 const orbitron = Orbitron({

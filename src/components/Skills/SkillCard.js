@@ -47,14 +47,13 @@ const skills = [
 
 const SkillsCard = ({ isVisible }) => {
     return (
-        <section className="mb-20" id="skills">
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+        <section className="mb-20 relative" id="skills">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 relative z-10">
                 {skills.map((skill, index) => (
                     <div
                         key={index}
                         className={`
                             bg-zinc-900/80 border border-cyan-400/20 p-8 
-                            transition-all duration-700 ease-out
                             hover:border-cyan-400 hover:shadow-lg hover:shadow-cyan-400/10 hover:-translate-y-1 
                             relative overflow-hidden group ${spaceGrotesk.className}
                             ${isVisible
@@ -63,15 +62,36 @@ const SkillsCard = ({ isVisible }) => {
                             }
                         `}
                         style={{
-                            transitionDelay: `${index * 150}ms`
+                            // Hanya untuk initial animation
+                            transition: `
+                                opacity 700ms ease-out ${index * 150}ms,
+                                transform 700ms ease-out ${index * 150}ms,
+                                border-color 300ms ease-out,
+                                box-shadow 300ms ease-out
+                            `
                         }}
                     >
+                        {/* Individual card hover effect */}
+                        <div className="absolute inset-0 opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none">
+                            <div className="card-hexagon-grid">
+                                {Array.from({ length: 15 }).map((_, i) => (
+                                    <div
+                                        key={i}
+                                        className="card-hexagon"
+                                        style={{
+                                            '--delay': `${i * 0.05}s`
+                                        }}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+
                         {/* Hover effect overlay */}
                         <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-cyan-400 to-violet-500 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
 
                         {/* Skill name */}
                         <div className={`
-                            font-mono text-lg font-semibold mb-4 text-cyan-400
+                            font-mono text-lg font-semibold mb-4 text-cyan-400 relative z-10
                             transition-all duration-500 ease-out
                             ${isVisible
                                 ? 'opacity-100 translate-y-0'
@@ -87,7 +107,7 @@ const SkillsCard = ({ isVisible }) => {
 
                         {/* Progress bar container */}
                         <div className={`
-                            w-full h-2 bg-slate-500/30 rounded overflow-hidden relative mb-3
+                            w-full h-2 bg-slate-500/30 rounded overflow-hidden relative mb-3 z-10
                             transition-all duration-500 ease-out
                             ${isVisible
                                 ? 'opacity-100 scale-x-100'
@@ -115,7 +135,7 @@ const SkillsCard = ({ isVisible }) => {
 
                         {/* Percentage text */}
                         <div className={`
-                            text-right text-sm text-slate-400 font-mono
+                            text-right text-sm text-slate-400 font-mono relative z-10
                             transition-all duration-500 ease-out
                             ${isVisible
                                 ? 'opacity-100 translate-y-0'
@@ -134,6 +154,31 @@ const SkillsCard = ({ isVisible }) => {
                     </div>
                 ))}
             </div>
+            <style jsx>{`
+                .card-hexagon-grid {
+                    display: grid;
+                    grid-template-columns: repeat(5, 1fr);
+                    grid-template-rows: repeat(3, 1fr);
+                    gap: 8px;
+                    padding: 16px;
+                    height: 100%;
+                    width: 100%;
+                }
+                
+                .card-hexagon {
+                    width: 16px;
+                    height: 16px;
+                    background: linear-gradient(45deg, rgba(0, 255, 255, 0.4), rgba(138, 43, 226, 0.4));
+                    clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
+                    animation: hexagonPulse 2s infinite ease-in-out;
+                    animation-delay: var(--delay);
+                }
+                
+                @keyframes hexagonPulse {
+                    0%, 100% { opacity: 0.3; transform: scale(1); }
+                    50% { opacity: 0.8; transform: scale(1.2); }
+                }
+            `}</style>
         </section>
     );
 };

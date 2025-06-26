@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useRef, useState } from 'react'
-import SectionTitle from './SectionTitle'
+import SectionTitle from '../SectionTitle'
 import SkillCard from './SkillCard'
 
 export default function Skills() {

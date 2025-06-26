@@ -1,8 +1,10 @@
-import Header from '../components/Header'
-import About from '../components/About'
+import Header from '../components/Header/Header'
+import About from '../components/About/About'
 import ScrollIndicator from '../components/ScrollIndicator'
 import BackgroundPattern from '../components/BackgroundPattern'
-import Skills from '../components/Skill'
+import Skills from '../components/Skills/Skill'
+import Projects from '../components/Projects/Project'
+import Quote from '@/components/Quote/quote'
 
 export default function Home() {
   return (
@@ -13,6 +15,8 @@ export default function Home() {
         <Header />
         <About />
         <Skills />
+        <Projects />
+        <Quote />
 
         <ScrollIndicator />
       </div>
