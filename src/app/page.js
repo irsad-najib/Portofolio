@@ -4,6 +4,7 @@ import ScrollIndicator from '../components/ScrollIndicator'
 import BackgroundPattern from '../components/BackgroundPattern'
 import Skills from '../components/Skills/Skill'
 import Projects from '../components/Projects/Project'
+import Certificate from '@/components/Certificate/Certificates'
 import Quote from '@/components/Quote/quote'
 
 export default function Home() {
@@ -16,6 +17,7 @@ export default function Home() {
         <About />
         <Skills />
         <Projects />
+        <Certificate />
         <Quote />
 
         <ScrollIndicator />

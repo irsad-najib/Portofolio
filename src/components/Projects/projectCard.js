@@ -12,19 +12,22 @@ const projects = [
         id: 1,
         title: "E-Commerce Platform",
         description: "A full-stack e-commerce solution with real-time inventory management, payment integration, and advanced analytics dashboard.",
-        technologies: ["React", "Node.js", "MongoDB", "Stripe"]
+        technologies: ["React", "Node.js", "MongoDB", "Stripe"],
+        link: "https://example.com/e-commerce-platform"
     },
     {
         id: 2,
         title: "AI Analytics Dashboard",
         description: "Machine learning-powered analytics platform with predictive modeling and real-time data visualization capabilities.",
-        technologies: ["Python", "TensorFlow", "React", "PostgreSQL"]
+        technologies: ["Python", "TensorFlow", "React", "PostgreSQL"],
+        link: "https://example.com/ai-analytics-dashboard"
     },
     {
         id: 3,
         title: "Blockchain Wallet",
         description: "Secure cryptocurrency wallet with multi-chain support, DeFi integration, and advanced security features.",
-        technologies: ["Web3.js", "Solidity", "React", "MetaMask"]
+        technologies: ["Web3.js", "Solidity", "React", "MetaMask"],
+        link: "https://example.com/blockchain-wallet"
     }
 ];
 
@@ -86,9 +89,13 @@ const ProjectCard = ({ project, index, isVisible }) => {
         }
     }, [index]);
 
+    const handleProjectClick = () => {
+        window.open(project.link, '_blank', 'noopener,noreferrer');
+    };
+
     return (
         <div
-            className={` max-w-2xl w-full mx-auto
+            className={` max-w-2xl w-full mx-auto cursor-pointer
                 group relative bg-zinc-900/80 border border-cyan-500/20 overflow-hidden rounded-lg
                 transition-all duration-700 ease-out hover:border-cyan-400
                 hover:-translate-y-2 hover:shadow-xl hover:shadow-cyan-500/10
@@ -97,6 +104,7 @@ const ProjectCard = ({ project, index, isVisible }) => {
             style={{
                 transitionDelay: `${index * 150}ms`
             }}
+            onClick={handleProjectClick}
         >
             {/* Project Image */}
             <div className="relative w-full h-48 lg:h-64 bg-gradient-to-br from-zinc-800 to-zinc-700 flex items-center justify-center overflow-hidden">
@@ -148,6 +156,16 @@ const ProjectCard = ({ project, index, isVisible }) => {
                             backgroundSize: '20px 20px'
                         }}
                     ></div>
+                </div>
+
+                {/* Click to View overlay */}
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <div className="text-center">
+                        <div className={`${spaceGrotesk.className} text-cyan-400 font-semibold text-lg uppercase tracking-wide mb-2`}>
+                            Click to View
+                        </div>
+                        <div className="w-12 h-0.5 bg-gradient-to-r from-cyan-400 to-violet-500 mx-auto animate-pulse"></div>
+                    </div>
                 </div>
             </div>
 

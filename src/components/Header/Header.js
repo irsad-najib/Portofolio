@@ -47,13 +47,13 @@ export default function Header() {
           `} />
                 </h1>
 
-                <p className={`
+                {/* <p className={`
           text-sm md:text-lg text-center text-gray-400 mt-4 md:mt-6
           transition-all duration-1000 ease-out delay-[600ms] ${spaceGrotesk.className}
           ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'}
         `}>
                     Undergraduate Information Engineering
-                </p>
+                </p> */}
             </div>
 
             {/* ScrollIndicator terpisah - di atas garis */}
