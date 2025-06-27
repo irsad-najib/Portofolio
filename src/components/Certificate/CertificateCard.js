@@ -265,20 +265,6 @@ const CertificateCard = ({ isVisible }) => {
     return (
         <>
             <section className="mb-20 relative w-full max-w-6xl" id="certificates">
-                {/* Hexagon grid background effect */}
-                <div className="absolute inset-0 opacity-10 pointer-events-none overflow-hidden">
-                    <div className="hexagon-grid">
-                        {Array.from({ length: 32 }).map((_, i) => (
-                            <div
-                                key={i}
-                                className="hexagon"
-                                style={{
-                                    '--delay': `${i * 0.1}s`
-                                }}
-                            />
-                        ))}
-                    </div>
-                </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 relative z-10">
                     {certificates.map((certificate, index) => (
@@ -293,36 +279,6 @@ const CertificateCard = ({ isVisible }) => {
                 </div>
 
                 <style jsx>{`
-                    .hexagon-grid {
-                        display: grid;
-                        grid-template-columns: repeat(10, 1fr);
-                        grid-template-rows: repeat(8, 1fr);
-                        gap: 20px;
-                        padding: 40px;
-                        height: 100%;
-                        width: 100%;
-                    }
-                    
-                    .hexagon {
-                        width: 20px;
-                        height: 20px;
-                        background: linear-gradient(45deg, rgba(0, 255, 255, 0.3), rgba(138, 43, 226, 0.3));
-                        clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
-                        animation: hexagonPulse 3s infinite ease-in-out;
-                        animation-delay: var(--delay);
-                    }
-                    
-                    @keyframes hexagonPulse {
-                        0%, 100% { 
-                            opacity: 0.2; 
-                            transform: scale(0.8); 
-                        }
-                        50% { 
-                            opacity: 0.8; 
-                            transform: scale(1.1); 
-                        }
-                    }
-                    
                     .line-clamp-2 {
                         display: -webkit-box;
                         -webkit-line-clamp: 2;
