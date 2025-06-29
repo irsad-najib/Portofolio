@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Space_Grotesk } from 'next/font/google'
 import Button from '../Button';
 
@@ -130,7 +130,67 @@ const SkillsCard = ({ isVisible }) => {
     const [modalVisible, setModalVisible] = useState(false);
 
     const displayedSkills = skills.slice(0, 6);
-    const hiddenSkills = skills.slice(6);
+
+    // Inject CSS animations untuk hexagon
+    useEffect(() => {
+        const styleId = 'skill-card-animations';
+        if (document.getElementById(styleId)) return;
+
+        const style = document.createElement('style');
+        style.id = styleId;
+        style.textContent = `
+            .card-hexagon-grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                grid-template-rows: repeat(3, 1fr);
+                gap: 6px;
+                padding: 12px;
+                height: 100%;
+                width: 100%;
+            }
+            
+            .card-hexagon {
+                width: 12px;
+                height: 12px;
+                background: linear-gradient(45deg, rgba(0, 255, 255, 0.4), rgba(138, 43, 226, 0.4));
+                clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
+                animation: hexagonPulse 2s infinite ease-in-out;
+                animation-delay: var(--delay);
+                transform: scale(1);
+                opacity: 0.3;
+            }
+            
+            @keyframes hexagonPulse {
+                0%, 100% { 
+                    opacity: 0.3; 
+                    transform: scale(1); 
+                }
+                50% { 
+                    opacity: 0.8; 
+                    transform: scale(1.2); 
+                }
+            }
+
+            /* Additional skill card hover effects */
+            .skill-card:hover .card-hexagon {
+                animation-play-state: running;
+            }
+
+            .skill-card .card-hexagon {
+                animation-play-state: paused;
+            }
+
+            .skill-card:hover .card-hexagon-grid {
+                opacity: 0.3 !important;
+            }
+        `;
+        document.head.appendChild(style);
+
+        return () => {
+            const existingStyle = document.getElementById(styleId);
+            if (existingStyle) existingStyle.remove();
+        };
+    }, []);
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -145,7 +205,7 @@ const SkillsCard = ({ isVisible }) => {
     const SkillCardComponent = ({ skill, index, isModalCard = false }) => (
         <div
             className={`
-                bg-zinc-900/80 border border-cyan-400/20 p-6 
+                skill-card bg-zinc-900/80 border border-cyan-400/20 p-6 rounded-lg
                 hover:border-cyan-400 hover:shadow-lg hover:shadow-cyan-400/10 hover:-translate-y-1 
                 relative overflow-hidden group ${spaceGrotesk.className}
                 ${!isModalCard && isVisible
@@ -207,6 +267,10 @@ const SkillsCard = ({ isVisible }) => {
 
             {/* Background glow effect */}
             <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/5 to-violet-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+            {/* Corner dots untuk visual enhancement */}
+            <div className="absolute top-1 left-1 w-1 h-1 bg-cyan-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute bottom-1 right-1 w-1 h-1 bg-violet-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </div>
     );
 
@@ -263,7 +327,7 @@ const SkillsCard = ({ isVisible }) => {
                         {/* Modal Header */}
                         <div className="flex justify-between items-center p-6 border-b border-cyan-400/20">
                             <h3 className={`${spaceGrotesk.className} text-2xl font-bold text-cyan-400`}>
-                                All Skills
+                                All Skills & Technologies
                             </h3>
                             <button
                                 onClick={closeModal}
@@ -275,6 +339,18 @@ const SkillsCard = ({ isVisible }) => {
 
                         {/* Modal Body */}
                         <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+                            {/* Categories filter buttons */}
+                            <div className="flex flex-wrap gap-2 mb-6">
+                                {['All', 'Frontend', 'Backend', 'Database', 'DevOps', 'Tools', 'Mobile', 'Design', 'Other'].map((category) => (
+                                    <button
+                                        key={category}
+                                        className="px-3 py-1 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs rounded hover:bg-cyan-500/20 hover:border-cyan-500/50 transition-all duration-300"
+                                    >
+                                        {category}
+                                    </button>
+                                ))}
+                            </div>
+
                             {/* All skills grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                                 {skills.map((skill, index) => (
@@ -289,7 +365,10 @@ const SkillsCard = ({ isVisible }) => {
                         </div>
 
                         {/* Modal Footer */}
-                        <div className="flex justify-end p-6 border-t border-cyan-400/20">
+                        <div className="flex justify-between items-center p-6 border-t border-cyan-400/20">
+                            <div className={`${spaceGrotesk.className} text-slate-400 text-sm`}>
+                                Total: {skills.length} skills
+                            </div>
                             <Button
                                 variant="secondary"
                                 size="medium"
@@ -309,32 +388,6 @@ const SkillsCard = ({ isVisible }) => {
                     </div>
                 </div>
             )}
-
-            <style jsx>{`
-                .card-hexagon-grid {
-                    display: grid;
-                    grid-template-columns: repeat(4, 1fr);
-                    grid-template-rows: repeat(3, 1fr);
-                    gap: 6px;
-                    padding: 12px;
-                    height: 100%;
-                    width: 100%;
-                }
-                
-                .card-hexagon {
-                    width: 12px;
-                    height: 12px;
-                    background: linear-gradient(45deg, rgba(0, 255, 255, 0.4), rgba(138, 43, 226, 0.4));
-                    clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
-                    animation: hexagonPulse 2s infinite ease-in-out;
-                    animation-delay: var(--delay);
-                }
-                
-                @keyframes hexagonPulse {
-                    0%, 100% { opacity: 0.3; transform: scale(1); }
-                    50% { opacity: 0.8; transform: scale(1.2); }
-                }
-            `}</style>
         </section>
     );
 };
