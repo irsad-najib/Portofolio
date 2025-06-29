@@ -51,7 +51,7 @@ export default function Quote() {
                 {/* Hexagon grid effect */}
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none">
                     <div className="hexagon-grid">
-                        {Array.from({ length: 20 }).map((_, i) => (
+                        {Array.from({ length: 24 }).map((_, i) => (
                             <div
                                 key={i}
                                 className="hexagon"
