@@ -2,8 +2,97 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Root variables */
-/* ============= UPDATE src/app/globals.css ============= */
+/* Preload critical fonts */
+@layer base {
+  @font-face {
+    font-family: "Space Grotesk";
+    font-style: normal;
+    font-weight: 400 600;
+    font-display: swap;
+    src: url("/fonts/space-grotesk.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "Orbitron";
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url("/fonts/orbitron.woff2") format("woff2");
+  }
+}
+
+/* Root variables with CSS custom properties */
+:root {
+  --bg-primary-dark: #0f172a;
+  --bg-secondary-dark: #1e293b;
+  --text-primary-dark: #f1f5f9;
+  --text-secondary-dark: #cbd5e1;
+  --border-dark: #334155;
+  --accent: #06b6d4;
+  --accent-hover: #0891b2;
+}
+
+/* Base optimizations */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg-primary-dark);
+  color: var(--text-primary-dark);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Optimize animations with will-change */
+.animate-bounce,
+.animate-pulse,
+.animate-spin {
+  will-change: transform;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #06b6d4, #8b5cf6);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #0891b2, #7c3aed);
+}
+
+/* Performance optimizations */
+@layer utilities {
+  .gpu-accelerated {
+    transform: translateZ(0);
+    will-change: transform;
+  }
+
+  .smooth-animation {
+    animation-fill-mode: both;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
 
 /* Enhanced Dark Mode Variables */
 :root {

@@ -1,19 +1,26 @@
-export default function ProfilePhoto({ isVisible }) {
+import Image from 'next/image';
+import { memo } from 'react';
+
+const ProfilePhoto = memo(({ isVisible }) => {
     return (
         <div className={`
-      relative w-32 h-32 md:w-48 md:h-48 rounded-3xl p-0.5 my-5
-      transition-all duration-1000 ease-out delay-[250ms]
-      ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}
-    `}>
+            relative w-32 h-32 md:w-48 md:h-48 rounded-3xl p-0.5 my-5
+            transition-all duration-1000 ease-out delay-[250ms]
+            ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}
+        `}>
             {/* Glowing effect dengan custom animation */}
             <div className="absolute -inset-px rounded-3xl bg-gradient-to-r from-cyan-400 to-violet-500 animate-pulse-subtle" />
 
             {/* Photo container */}
             <div className="relative w-full h-full rounded-3xl overflow-hidden bg-gray-800">
-                <img
+                <Image
                     src="/new.JPG"
                     alt="Irsad Najib Eka Putra"
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
+                    priority
+                    sizes="(max-width: 768px) 128px, 192px"
+                    quality={85}
                 />
             </div>
 
@@ -23,16 +30,20 @@ export default function ProfilePhoto({ isVisible }) {
                 }
                 
                 @keyframes pulse-subtle {
-                    0%, 100% {
-                        opacity: 1;
-                        transform: scale(1);
+                    0%, 100% { 
+                        opacity: 0.8; 
+                        transform: scale(1); 
                     }
-                    50% {
-                        opacity: 0.7;
-                        transform: scale(1.1);
+                    50% { 
+                        opacity: 1; 
+                        transform: scale(1.02); 
                     }
                 }
             `}</style>
         </div>
-    )
-}
+    );
+});
+
+ProfilePhoto.displayName = 'ProfilePhoto';
+
+export default ProfilePhoto;

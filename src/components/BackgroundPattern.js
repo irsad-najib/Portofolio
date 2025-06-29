@@ -1,6 +1,6 @@
 'use client';
 import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 
 export default function BackgroundPattern() {
     const { theme } = useTheme();
@@ -10,185 +10,108 @@ export default function BackgroundPattern() {
         setMounted(true);
     }, []);
 
+    // Memoize style calculations
+    const backgroundStyles = useMemo(() => {
+        if (!mounted) return {};
+
+        if (theme === 'dark') {
+            return {
+                backgroundImage: `
+                    radial-gradient(circle at 25% 25%, rgba(6, 182, 212, 0.3) 0%, transparent 50%),
+                    radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.2) 0%, transparent 50%),
+                    radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 60%)
+                `,
+                animation: 'elegantFloat 12s ease-in-out infinite'
+            };
+        } else {
+            return {
+                backgroundImage: `
+                    radial-gradient(circle at 30% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                    radial-gradient(circle at 70% 80%, rgba(14, 165, 233, 0.12) 0%, transparent 50%),
+                    radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.08) 0%, transparent 60%)
+                `,
+                animation: 'lightFloat 15s ease-in-out infinite'
+            };
+        }
+    }, [theme, mounted]);
+
+    const gridStyles = useMemo(() => {
+        if (!mounted) return {};
+
+        return {
+            backgroundImage: theme === 'dark'
+                ? `
+                    linear-gradient(90deg, transparent 0%, rgba(6, 182, 212, 0.1) 50%, transparent 100%),
+                    linear-gradient(0deg, transparent 0%, rgba(139, 92, 246, 0.1) 50%, transparent 100%)
+                `
+                : `
+                    linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, transparent 30%),
+                    linear-gradient(45deg, rgba(14, 165, 233, 0.08) 0%, transparent 25%)
+                `,
+            backgroundSize: theme === 'dark' ? '800px 1px, 1px 800px' : '400px 400px, 300px 300px',
+            animation: theme === 'dark' ? 'subtleScan 20s linear infinite' : 'gentleRotate 25s linear infinite'
+        };
+    }, [theme, mounted]);
+
     if (!mounted) return null;
 
     return (
-        <>
-            {/* Main Background Pattern */}
-            <div className="fixed inset-0 pointer-events-none">
-                <div
-                    className={`
-                        absolute inset-0 transition-all duration-1000 ease-out
-                        ${theme === 'dark' ? 'opacity-40' : 'opacity-10'}
-                    `}
-                    style={{
-                        background: theme === 'dark'
-                            ? `
-                                radial-gradient(circle at 15% 30%, rgba(0, 212, 255, 0.15) 0%, transparent 40%),
-                                radial-gradient(circle at 85% 20%, rgba(0, 102, 255, 0.12) 0%, transparent 45%),
-                                radial-gradient(circle at 45% 85%, rgba(255, 0, 102, 0.1) 0%, transparent 40%),
-                                radial-gradient(circle at 75% 70%, rgba(0, 212, 255, 0.08) 0%, transparent 35%),
-                                conic-gradient(from 45deg at 50% 50%, 
-                                    transparent 0deg, 
-                                    rgba(0, 212, 255, 0.05) 90deg, 
-                                    transparent 180deg, 
-                                    rgba(0, 102, 255, 0.03) 270deg, 
-                                    transparent 360deg
-                                )
-                            `
-                            : `
-                                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
-                                radial-gradient(circle at 80% 30%, rgba(6, 182, 212, 0.06) 0%, transparent 45%)
-                            `,
-                        animation: theme === 'dark'
-                            ? 'darkFloat 8s ease-in-out infinite'
-                            : 'lightFloat 12s ease-in-out infinite'
-                    }}
-                />
+        <div className={`
+            fixed inset-0 pointer-events-none transition-all duration-1000
+            ${theme === 'dark' ? 'opacity-10' : 'opacity-15'}
+        `}>
+            {/* Main gradient */}
+            <div className="absolute inset-0" style={backgroundStyles} />
 
-                {/* Animated Particles for Dark Mode */}
-                {theme === 'dark' && (
-                    <>
-                        <div
-                            className="absolute w-2 h-2 bg-cyan-400 rounded-full opacity-60"
-                            style={{
-                                top: '20%',
-                                left: '10%',
-                                animation: 'particle1 6s ease-in-out infinite',
-                                boxShadow: '0 0 10px rgba(0, 212, 255, 0.8)'
-                            }}
-                        />
-                        <div
-                            className="absolute w-1 h-1 bg-blue-500 rounded-full opacity-40"
-                            style={{
-                                top: '60%',
-                                right: '15%',
-                                animation: 'particle2 8s ease-in-out infinite 2s',
-                                boxShadow: '0 0 6px rgba(0, 102, 255, 0.6)'
-                            }}
-                        />
-                        <div
-                            className="absolute w-1.5 h-1.5 bg-pink-500 rounded-full opacity-50"
-                            style={{
-                                bottom: '30%',
-                                left: '70%',
-                                animation: 'particle3 10s ease-in-out infinite 4s',
-                                boxShadow: '0 0 8px rgba(255, 0, 102, 0.7)'
-                            }}
-                        />
-                    </>
-                )}
+            {/* Grid pattern */}
+            <div className={`absolute inset-0 ${theme === 'dark' ? 'opacity-20' : 'opacity-25'}`} style={gridStyles} />
 
-                {/* Grid Pattern for Dark Mode */}
-                {theme === 'dark' && (
-                    <div
-                        className="absolute inset-0 opacity-5"
-                        style={{
-                            backgroundImage: `
-                                linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px),
-                                linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px)
-                            `,
-                            backgroundSize: '50px 50px',
-                            animation: 'gridMove 20s linear infinite'
-                        }}
-                    />
-                )}
-            </div>
+            {/* Dots pattern */}
+            <div
+                className={`absolute inset-0 ${theme === 'dark' ? 'opacity-15' : 'opacity-10'}`}
+                style={{
+                    backgroundImage: `radial-gradient(circle at center, ${theme === 'dark'
+                            ? 'rgba(6, 182, 212, 0.4) 1px, transparent 1px'
+                            : 'rgba(59, 130, 246, 0.3) 0.5px, transparent 0.5px'
+                        })`,
+                    backgroundSize: theme === 'dark' ? '60px 60px' : '80px 80px',
+                    animation: theme === 'dark' ? 'dotPulse 15s ease-in-out infinite' : 'lightDotPulse 18s ease-in-out infinite'
+                }}
+            />
 
-            {/* CSS Animations */}
             <style jsx>{`
-                @keyframes darkFloat {
-                    0%, 100% { 
-                        transform: translateY(0px) rotate(0deg) scale(1);
-                        filter: hue-rotate(0deg);
-                    }
-                    25% { 
-                        transform: translateY(-20px) rotate(2deg) scale(1.02);
-                        filter: hue-rotate(10deg);
-                    }
-                    50% { 
-                        transform: translateY(-10px) rotate(-1deg) scale(0.98);
-                        filter: hue-rotate(20deg);
-                    }
-                    75% { 
-                        transform: translateY(-30px) rotate(1deg) scale(1.01);
-                        filter: hue-rotate(10deg);
-                    }
+                @keyframes elegantFloat {
+                    0%, 100% { transform: translateY(0px) scale(1); }
+                    50% { transform: translateY(-20px) scale(1.05); }
                 }
-
+                
                 @keyframes lightFloat {
-                    0%, 100% { 
-                        transform: translateY(0px) rotate(0deg);
-                        opacity: 0.1;
-                    }
-                    50% { 
-                        transform: translateY(-5px) rotate(1deg);
-                        opacity: 0.15;
-                    }
+                    0%, 100% { transform: translateX(0px) translateY(0px) scale(1); }
+                    33% { transform: translateX(15px) translateY(-10px) scale(1.02); }
+                    66% { transform: translateX(-10px) translateY(15px) scale(0.98); }
                 }
-
-                @keyframes particle1 {
-                    0%, 100% { 
-                        transform: translateY(0px) translateX(0px);
-                        opacity: 0.6;
-                    }
-                    33% { 
-                        transform: translateY(-30px) translateX(20px);
-                        opacity: 0.8;
-                    }
-                    66% { 
-                        transform: translateY(-10px) translateX(-15px);
-                        opacity: 0.4;
-                    }
+                
+                @keyframes subtleScan {
+                    0% { transform: translateX(-50%) translateY(-50%); opacity: 0; }
+                    50% { opacity: 0.3; }
+                    100% { transform: translateX(50%) translateY(50%); opacity: 0; }
                 }
-
-                @keyframes particle2 {
-                    0%, 100% { 
-                        transform: translateY(0px) translateX(0px) scale(1);
-                        opacity: 0.4;
-                    }
-                    50% { 
-                        transform: translateY(40px) translateX(-30px) scale(1.5);
-                        opacity: 0.7;
-                    }
+                
+                @keyframes gentleRotate {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
                 }
-
-                @keyframes particle3 {
-                    0%, 100% { 
-                        transform: translateY(0px) translateX(0px) rotate(0deg);
-                        opacity: 0.5;
-                    }
-                    25% { 
-                        transform: translateY(-20px) translateX(15px) rotate(90deg);
-                        opacity: 0.8;
-                    }
-                    75% { 
-                        transform: translateY(10px) translateX(-20px) rotate(270deg);
-                        opacity: 0.3;
-                    }
+                
+                @keyframes dotPulse {
+                    0%, 100% { opacity: 0.15; transform: scale(1); }
+                    50% { opacity: 0.3; transform: scale(1.1); }
                 }
-
-                @keyframes gridMove {
-                    0% { 
-                        transform: translate(0, 0);
-                    }
-                    100% { 
-                        transform: translate(50px, 50px);
-                    }
-                }
-
-                /* Glowing border animation */
-                @keyframes borderGlow {
-                    0%, 100% { 
-                        border-color: rgba(0, 212, 255, 0.3);
-                        box-shadow: 0 0 5px rgba(0, 212, 255, 0.2);
-                    }
-                    50% { 
-                        border-color: rgba(0, 212, 255, 0.6);
-                        box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
-                    }
+                
+                @keyframes lightDotPulse {
+                    0%, 100% { opacity: 0.1; transform: scale(1); }
+                    50% { opacity: 0.2; transform: scale(1.05); }
                 }
             `}</style>
-        </>
+        </div>
     );
 }
