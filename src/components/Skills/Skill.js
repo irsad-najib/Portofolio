@@ -13,10 +13,9 @@ export default function Skills() {
             ([entry]) => {
                 if (entry.isIntersecting) {
                     setIsVisible(true)
-                    // Delay cards animation after title animation completes
                     setTimeout(() => {
                         setShowCards(true)
-                    }, 1200) // Title animation (700ms) + underline (1000ms with 500ms delay)
+                    }, 1200)
                 }
             },
             {
@@ -35,10 +34,12 @@ export default function Skills() {
     return (
         <section
             ref={sectionRef}
-            className="min-h-screen flex flex-col items-center justify-center px-5 py-10"
+            className="min-h-screen flex flex-col items-center justify-center px-4 md:px-8 py-10 w-full max-w-full overflow-x-hidden"
         >
-            <SectionTitle title="SKILLS" isVisible={isVisible} />
-            <SkillCard isVisible={showCards} />
+            <div className="w-full max-w-7xl mx-auto overflow-x-hidden">
+                <SectionTitle title="SKILLS" isVisible={isVisible} />
+                <SkillCard isVisible={showCards} />
+            </div>
         </section>
     )
 }

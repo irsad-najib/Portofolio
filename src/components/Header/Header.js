@@ -23,7 +23,7 @@ export default function Header() {
     }, [])
 
     return (
-        <section className="min-h-screen flex flex-col items-center justify-center relative overflow-visible px-4 py-8 md:py-0">
+        <section className="min-h-screen flex flex-col items-center justify-center relative px-4 py-8 md:py-0">
             <ThemeToggle />
 
             <AnimatedLine

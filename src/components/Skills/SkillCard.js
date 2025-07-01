@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Space_Grotesk } from 'next/font/google'
 import Button from '../Button';
 
@@ -125,13 +125,46 @@ const skills = [
     }
 ];
 
-const SkillsCard = ({ isVisible }) => {
+const SkillsCard = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
+    const [isVisible, setIsVisible] = useState(false);
+    const [showCards, setShowCards] = useState(false); // Tambahkan state baru untuk cards
+    const [animateProgress, setAnimateProgress] = useState(false);
+    const sectionRef = useRef(null);
 
     const displayedSkills = skills.slice(0, 6);
 
-    // Inject CSS animations untuk hexagon
+    // Set up Intersection Observer - SAMAIN SAMA PROJECT
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsVisible(true);
+                    // Delay cards animation setelah section terdeteksi (sama seperti Project)
+                    setTimeout(() => {
+                        setShowCards(true);
+                    }, 600); // Delay untuk entrance cards
+                    // Delay progress bar animation setelah cards muncul
+                    setTimeout(() => {
+                        setAnimateProgress(true);
+                    }, 1200); // Delay untuk progress bars
+                }
+            },
+            {
+                threshold: 0.3, // Samain dengan Project
+                rootMargin: '0px 0px -100px 0px' // Samain dengan Project
+            }
+        );
+
+        if (sectionRef.current) {
+            observer.observe(sectionRef.current);
+        }
+
+        return () => observer.disconnect();
+    }, []);
+
+    // Update CSS animations untuk entrance yang lebih smooth
     useEffect(() => {
         const styleId = 'skill-card-animations';
         if (document.getElementById(styleId)) return;
@@ -139,50 +172,39 @@ const SkillsCard = ({ isVisible }) => {
         const style = document.createElement('style');
         style.id = styleId;
         style.textContent = `
-            .card-hexagon-grid {
-                display: grid;
-                grid-template-columns: repeat(4, 1fr);
-                grid-template-rows: repeat(3, 1fr);
-                gap: 6px;
-                padding: 12px;
-                height: 100%;
-                width: 100%;
-            }
-            
-            .card-hexagon {
-                width: 12px;
-                height: 12px;
-                background: linear-gradient(45deg, rgba(0, 255, 255, 0.4), rgba(138, 43, 226, 0.4));
-                clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
-                animation: hexagonPulse 2s infinite ease-in-out;
-                animation-delay: var(--delay);
-                transform: scale(1);
-                opacity: 0.3;
-            }
-            
-            @keyframes hexagonPulse {
-                0%, 100% { 
-                    opacity: 0.3; 
-                    transform: scale(1); 
+            @keyframes skillCardFadeIn {
+                0% {
+                    opacity: 0;
+                    transform: translateY(40px);
                 }
-                50% { 
-                    opacity: 0.8; 
-                    transform: scale(1.2); 
+                100% {
+                    opacity: 1;
+                    transform: translateY(0);
                 }
             }
 
-            /* Additional skill card hover effects */
-            .skill-card:hover .card-hexagon {
-                animation-play-state: running;
+            .skill-card {
+                transition: all 300ms ease-in-out;
+            }
+            
+            .skill-card.animated {
+                animation: skillCardFadeIn 800ms cubic-bezier(0.17, 0.84, 0.44, 1) forwards;
+                animation-delay: var(--delay, 0ms);
             }
 
-            .skill-card .card-hexagon {
-                animation-play-state: paused;
+            .skill-card:hover {
+                transform: translateY(-4px) !important;
+                border-color: rgb(34 211 238) !important;
+                box-shadow: 0 10px 25px rgba(34, 211, 238, 0.15) !important;
             }
 
-            .skill-card:hover .card-hexagon-grid {
-                opacity: 0.3 !important;
+            /* Progress shimmer effect - SEDERHANA */
+            @keyframes shimmer {
+                0% { left: -100%; }
+                100% { left: 100%; }
             }
+
+            /* Sisanya sama... */
         `;
         document.head.appendChild(style);
 
@@ -202,80 +224,122 @@ const SkillsCard = ({ isVisible }) => {
         setTimeout(() => setIsModalOpen(false), 300);
     };
 
-    const SkillCardComponent = ({ skill, index, isModalCard = false }) => (
-        <div
-            className={`
-                skill-card bg-zinc-900/80 border border-cyan-400/20 p-6 rounded-lg
-                hover:border-cyan-400 hover:shadow-lg hover:shadow-cyan-400/10 hover:-translate-y-1 
-                relative overflow-hidden group ${spaceGrotesk.className}
-                ${!isModalCard && isVisible
-                    ? 'opacity-100 translate-x-0'
-                    : !isModalCard ? 'opacity-0 translate-x-8' : 'opacity-100'
-                }
-                ${isModalCard ? 'transition-all duration-300' : ''}
-            `}
-            style={!isModalCard ? {
-                transition: `
-                    opacity 700ms ease-out ${index * 150}ms,
-                    transform 700ms ease-out ${index * 150}ms,
-                    border-color 300ms ease-out,
-                    box-shadow 300ms ease-out
-                `
-            } : {}}
-        >
-            {/* Hexagon background effect */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none">
-                <div className="card-hexagon-grid">
-                    {Array.from({ length: 12 }).map((_, i) => (
-                        <div
-                            key={i}
-                            className="card-hexagon"
-                            style={{ '--delay': `${i * 0.05}s` }}
-                        />
-                    ))}
+    // Counter animation hook - UPDATED untuk mengontrol progress bar juga
+    const useCounter = (end, duration = 1200, delay = 0, shouldStart = false) => {
+        const [count, setCount] = useState(0);
+        const [progress, setProgress] = useState(0); // Tracking progress 0-100%
+
+        useEffect(() => {
+            if (!shouldStart) return;
+
+            const timer = setTimeout(() => {
+                let startTime;
+                const animate = (currentTime) => {
+                    if (!startTime) startTime = currentTime;
+                    const progressRatio = Math.min((currentTime - startTime) / duration, 1);
+
+                    // Use easing function for smooth animation
+                    const easeOut = 1 - Math.pow(1 - progressRatio, 3);
+                    const currentCount = Math.floor(end * easeOut);
+
+                    setCount(currentCount);
+                    setProgress(easeOut * 100); // Untuk CSS variable
+
+                    if (progressRatio < 1) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        setCount(end);
+                        setProgress(100);
+                    }
+                };
+                requestAnimationFrame(animate);
+            }, delay);
+
+            return () => clearTimeout(timer);
+        }, [end, duration, delay, shouldStart]);
+
+        return { count, progress };
+    };
+
+    const SkillCardComponent = ({ skill, index, isModalCard = false }) => {
+        const shouldAnimateCounter = isModalCard || animateProgress;
+        const counterDelay = isModalCard ? index * 100 : index * 150 + 800;
+        const { count: animatedPercentage, progress: animationProgress } = useCounter(
+            skill.level, 1500, counterDelay, shouldAnimateCounter
+        );
+
+        // Gunakan useRef untuk menyimpan state opacity asli
+        const cardRef = useRef(null);
+
+        return (
+            <div
+                ref={cardRef}
+                className={`
+                    skill-card bg-zinc-900/80 border border-cyan-400/20 p-6 rounded-lg
+                    relative overflow-hidden group ${spaceGrotesk.className}
+                    ${!isModalCard && showCards ? 'animated' : ''}
+                `}
+                style={{
+                    opacity: isModalCard ? 1 : 0, // Start with opacity 0 for non-modal cards
+                    transform: isModalCard ? 'none' : 'translateY(40px)', // Start position
+                    '--delay': `${index * 120}ms` // Staggered animation delay
+                }}
+            >
+                {/* Top border effect */}
+                <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-cyan-400 to-violet-500 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
+
+                {/* Category badge */}
+                <div className="absolute top-2 right-2 px-2 py-1 bg-cyan-400/10 border border-cyan-400/30 rounded text-xs text-cyan-400 font-mono">
+                    {skill.category}
                 </div>
+
+                {/* Skill name */}
+                <div className="font-mono text-lg font-semibold mb-4 text-cyan-400 relative z-10 mt-4">
+                    {skill.name}
+                </div>
+
+                {/* Progress bar container - UPDATED */}
+                <div className="w-full h-2 bg-slate-500/30 rounded overflow-hidden relative mb-3 z-10">
+                    <div
+                        className="h-full bg-gradient-to-r from-cyan-400 to-violet-500 rounded"
+                        style={{
+                            width: `${shouldAnimateCounter ? (animationProgress * skill.level / 100) : 0}%`,
+                            transition: 'none', // Remove default transition
+                            position: 'relative',
+                            overflow: 'hidden'
+                        }}
+                    >
+                        {/* Shimmer effect inside bar */}
+                        <div
+                            className="absolute inset-0"
+                            style={{
+                                background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
+                                width: '100%',
+                                height: '100%',
+                                transform: animationProgress > 80 ? 'translateX(100%)' : 'translateX(-100%)',
+                                transition: 'transform 500ms ease-out',
+                            }}
+                        />
+                    </div>
+                </div>
+
+                {/* Percentage text with counter animation */}
+                <div className="text-right text-sm text-slate-400 font-mono relative z-10 skill-percentage">
+                    {animatedPercentage}%
+                </div>
+
+                {/* Background glow effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/5 to-violet-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                {/* Corner dots */}
+                <div className="absolute top-1 left-1 w-1 h-1 bg-cyan-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute bottom-1 right-1 w-1 h-1 bg-violet-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </div>
-
-            {/* Top border effect */}
-            <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-cyan-400 to-violet-500 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
-
-            {/* Category badge */}
-            <div className="absolute top-2 right-2 px-2 py-1 bg-cyan-400/10 border border-cyan-400/30 rounded text-xs text-cyan-400 font-mono">
-                {skill.category}
-            </div>
-
-            {/* Skill name */}
-            <div className="font-mono text-lg font-semibold mb-4 text-cyan-400 relative z-10 mt-4">
-                {skill.name}
-            </div>
-
-            {/* Progress bar container */}
-            <div className="w-full h-2 bg-slate-500/30 rounded overflow-hidden relative mb-3 z-10">
-                <div
-                    className="h-full bg-gradient-to-r from-cyan-400 to-violet-500 transition-all duration-1000 ease-out rounded"
-                    style={{
-                        width: `${skill.level}%`,
-                        transitionDelay: isModalCard ? '0ms' : `${index * 150 + 600}ms`
-                    }}
-                />
-            </div>
-
-            {/* Percentage text */}
-            <div className="text-right text-sm text-slate-400 font-mono relative z-10">
-                {skill.level}%
-            </div>
-
-            {/* Background glow effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/5 to-violet-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-            {/* Corner dots untuk visual enhancement */}
-            <div className="absolute top-1 left-1 w-1 h-1 bg-cyan-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <div className="absolute bottom-1 right-1 w-1 h-1 bg-violet-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        </div>
-    );
+        );
+    };
 
     return (
-        <section className="mb-20 relative">
+        <section className="mb-20 relative" ref={sectionRef}>
             {/* Main skills grid (first 6) */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 relative z-10">
                 {displayedSkills.map((skill, index) => (
@@ -289,11 +353,11 @@ const SkillsCard = ({ isVisible }) => {
                     variant="ghost"
                     size="medium"
                     onClick={openModal}
-                    className={`
+                    className={` bg-zinc-900/80
                         transition-all duration-700 ease-out
-                        ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}
+                        ${showCards ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}
                     `}
-                    style={{ transitionDelay: '900ms' }}
+                    style={{ transitionDelay: '1000ms' }} // Muncul setelah semua cards
                 >
                     <span>🔍</span>
                     View More Skills
@@ -304,7 +368,7 @@ const SkillsCard = ({ isVisible }) => {
             {isModalOpen && (
                 <div className={`
                     fixed inset-0 z-50 flex items-center justify-center p-4
-                    transition-all duration-300 ease-out
+                    transition-all duration-500 ease-out
                     ${modalVisible ? 'opacity-100' : 'opacity-0'}
                 `}>
                     {/* Backdrop */}
@@ -339,18 +403,6 @@ const SkillsCard = ({ isVisible }) => {
 
                         {/* Modal Body */}
                         <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
-                            {/* Categories filter buttons */}
-                            <div className="flex flex-wrap gap-2 mb-6">
-                                {['All', 'Frontend', 'Backend', 'Database', 'DevOps', 'Tools', 'Mobile', 'Design', 'Other'].map((category) => (
-                                    <button
-                                        key={category}
-                                        className="px-3 py-1 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs rounded hover:bg-cyan-500/20 hover:border-cyan-500/50 transition-all duration-300"
-                                    >
-                                        {category}
-                                    </button>
-                                ))}
-                            </div>
-
                             {/* All skills grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                                 {skills.map((skill, index) => (

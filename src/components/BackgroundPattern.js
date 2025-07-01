@@ -5,32 +5,39 @@ import { useEffect, useState, useMemo } from 'react';
 export default function BackgroundPattern() {
     const { theme } = useTheme();
     const [mounted, setMounted] = useState(false);
+    const [scrollY, setScrollY] = useState(0);
 
     useEffect(() => {
         setMounted(true);
+
+        const handleScroll = () => setScrollY(window.scrollY);
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Memoize style calculations
     const backgroundStyles = useMemo(() => {
         if (!mounted) return {};
 
         if (theme === 'dark') {
             return {
                 backgroundImage: `
-                    radial-gradient(circle at 25% 25%, rgba(6, 182, 212, 0.3) 0%, transparent 50%),
-                    radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.2) 0%, transparent 50%),
-                    radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 60%)
+                    radial-gradient(circle at 20% 30%, rgba(0, 255, 255, 0.4) 0%, transparent 40%),
+                    radial-gradient(circle at 80% 70%, rgba(138, 43, 226, 0.35) 0%, transparent 45%),
+                    radial-gradient(circle at 50% 10%, rgba(0, 255, 127, 0.25) 0%, transparent 50%),
+                    radial-gradient(circle at 30% 80%, rgba(255, 20, 147, 0.3) 0%, transparent 35%)
                 `,
-                animation: 'elegantFloat 12s ease-in-out infinite'
+                transform: `translateX(${scrollY * -0.15}px)`,
+                transition: 'transform 0.1s ease-out'
             };
         } else {
             return {
+                backgroundColor: 'rgba(248, 250, 252, 0.3)',
                 backgroundImage: `
-                    radial-gradient(circle at 30% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
-                    radial-gradient(circle at 70% 80%, rgba(14, 165, 233, 0.12) 0%, transparent 50%),
-                    radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.08) 0%, transparent 60%)
+                    radial-gradient(circle at 30% 20%, rgba(59, 130, 246, 0.4) 0%, transparent 50%),
+                    radial-gradient(circle at 70% 80%, rgba(99, 102, 241, 0.35) 0%, transparent 45%)
                 `,
-                animation: 'lightFloat 15s ease-in-out infinite'
+                transform: `translateX(${scrollY * 0.1}px)`,
+                transition: 'transform 0.1s ease-out'
             };
         }
     }, [theme, mounted]);
@@ -41,15 +48,40 @@ export default function BackgroundPattern() {
         return {
             backgroundImage: theme === 'dark'
                 ? `
-                    linear-gradient(90deg, transparent 0%, rgba(6, 182, 212, 0.1) 50%, transparent 100%),
-                    linear-gradient(0deg, transparent 0%, rgba(139, 92, 246, 0.1) 50%, transparent 100%)
+                    linear-gradient(90deg, transparent 0%, rgba(0, 255, 255, 0.3) 1px, transparent 1px),
+                    linear-gradient(0deg, transparent 0%, rgba(138, 43, 226, 0.25) 1px, transparent 1px)
                 `
                 : `
-                    linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, transparent 30%),
-                    linear-gradient(45deg, rgba(14, 165, 233, 0.08) 0%, transparent 25%)
+                    linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.3) 1px, rgba(59, 130, 246, 0.1) 2px),
+                    linear-gradient(0deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.25) 1px, rgba(99, 102, 241, 0.1) 2px)
                 `,
-            backgroundSize: theme === 'dark' ? '800px 1px, 1px 800px' : '400px 400px, 300px 300px',
-            animation: theme === 'dark' ? 'subtleScan 20s linear infinite' : 'gentleRotate 25s linear infinite'
+            backgroundSize: '100px 100px',
+            transform: theme === 'dark'
+                ? `translateX(${scrollY * -0.2}px) translateY(${scrollY * 0.1}px)`
+                : `translateX(${scrollY * 0.15}px)`,
+            transition: 'transform 0.1s ease-out'
+        };
+    }, [theme, mounted]);
+
+    const hexPattern = useMemo(() => {
+        if (!mounted) return {};
+
+        return {
+            backgroundImage: theme === 'dark'
+                ? `
+                    radial-gradient(circle at center, rgba(0, 255, 255, 0.6) 1px, transparent 1px),
+                    radial-gradient(circle at center, rgba(255, 20, 147, 0.4) 0.5px, transparent 0.5px)
+                `
+                : `
+                    radial-gradient(circle at center, rgba(59, 130, 246, 0.4) 1px, transparent 1px),
+                    radial-gradient(circle at center, rgba(99, 102, 241, 0.3) 0.5px, transparent 0.5px)
+                `,
+            backgroundSize: theme === 'dark' ? '50px 50px, 25px 25px' : '60px 60px, 30px 30px',
+            backgroundPosition: theme === 'dark' ? '0 0, 25px 25px' : '0 0, 30px 30px',
+            transform: theme === 'dark'
+                ? `translateX(${scrollY * 0.1}px) translateY(${scrollY * -0.05}px)`
+                : `translateX(${scrollY * -0.08}px)`,
+            transition: 'transform 0.1s ease-out'
         };
     }, [theme, mounted]);
 
@@ -58,60 +90,20 @@ export default function BackgroundPattern() {
     return (
         <div className={`
             fixed inset-0 pointer-events-none transition-all duration-1000
-            ${theme === 'dark' ? 'opacity-10' : 'opacity-15'}
+            ${theme === 'dark' ? 'opacity-20' : 'opacity-30'}
+            overflow-hidden
         `}>
-            {/* Main gradient */}
-            <div className="absolute inset-0" style={backgroundStyles} />
+            {/* Main cyber gradient */}
+            <div className="absolute inset-0 overflow-hidden" style={backgroundStyles} />
 
-            {/* Grid pattern */}
-            <div className={`absolute inset-0 ${theme === 'dark' ? 'opacity-20' : 'opacity-25'}`} style={gridStyles} />
+            {/* Cyber grid */}
+            <div className={`absolute inset-0 overflow-hidden ${theme === 'dark' ? 'opacity-40' : 'opacity-50'}`} style={gridStyles} />
 
-            {/* Dots pattern */}
+            {/* Hex pattern dots */}
             <div
-                className={`absolute inset-0 ${theme === 'dark' ? 'opacity-15' : 'opacity-10'}`}
-                style={{
-                    backgroundImage: `radial-gradient(circle at center, ${theme === 'dark'
-                            ? 'rgba(6, 182, 212, 0.4) 1px, transparent 1px'
-                            : 'rgba(59, 130, 246, 0.3) 0.5px, transparent 0.5px'
-                        })`,
-                    backgroundSize: theme === 'dark' ? '60px 60px' : '80px 80px',
-                    animation: theme === 'dark' ? 'dotPulse 15s ease-in-out infinite' : 'lightDotPulse 18s ease-in-out infinite'
-                }}
+                className={`absolute inset-0 overflow-hidden ${theme === 'dark' ? 'opacity-25' : 'opacity-35'}`}
+                style={hexPattern}
             />
-
-            <style jsx>{`
-                @keyframes elegantFloat {
-                    0%, 100% { transform: translateY(0px) scale(1); }
-                    50% { transform: translateY(-20px) scale(1.05); }
-                }
-                
-                @keyframes lightFloat {
-                    0%, 100% { transform: translateX(0px) translateY(0px) scale(1); }
-                    33% { transform: translateX(15px) translateY(-10px) scale(1.02); }
-                    66% { transform: translateX(-10px) translateY(15px) scale(0.98); }
-                }
-                
-                @keyframes subtleScan {
-                    0% { transform: translateX(-50%) translateY(-50%); opacity: 0; }
-                    50% { opacity: 0.3; }
-                    100% { transform: translateX(50%) translateY(50%); opacity: 0; }
-                }
-                
-                @keyframes gentleRotate {
-                    0% { transform: rotate(0deg); }
-                    100% { transform: rotate(360deg); }
-                }
-                
-                @keyframes dotPulse {
-                    0%, 100% { opacity: 0.15; transform: scale(1); }
-                    50% { opacity: 0.3; transform: scale(1.1); }
-                }
-                
-                @keyframes lightDotPulse {
-                    0%, 100% { opacity: 0.1; transform: scale(1); }
-                    50% { opacity: 0.2; transform: scale(1.05); }
-                }
-            `}</style>
         </div>
     );
 }

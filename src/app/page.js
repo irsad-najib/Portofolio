@@ -20,37 +20,37 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-slate-900 text-white overflow-x-hidden transition-colors duration-300">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-slate-900 text-white">
       <BackgroundPattern />
 
       {/* Above the fold content - load immediately */}
-      <div id="header">
+      <div id="header" >
         <Header />
       </div>
 
       {/* Below the fold content - lazy loaded */}
       <Suspense fallback={<Loading />}>
-        <div id="about">
+        <div id="about" className="overflow-hidden">
           <About />
         </div>
 
-        <div id="skills">
+        <div id="skills" className="overflow-hidden">
           <Skills />
         </div>
 
-        <div id="projects">
+        <div id="projects" className="overflow-hidden">
           <Projects />
         </div>
 
-        <div id="certificates">
+        <div id="certificates" className="overflow-hidden">
           <Certificate />
         </div>
 
-        <div id="quote">
+        <div id="quote" className="overflow-hidden">
           <Quote />
         </div>
 
-        <div className="flex justify-center py-10">
+        <div className="flex justify-center py-10 overflow-hidden">
           <Button
             onClick={openPdf}
             variant="primary"
