@@ -56,22 +56,22 @@ export default function Footer() {
     const socialLinks = [
         {
             name: 'GitHub',
-            url: 'https://github.com/irsadnajib',
+            url: 'https://github.com/irsad-najib',
             icon: '💻'
         },
         {
             name: 'LinkedIn',
-            url: 'https://linkedin.com/in/irsadnajib',
+            url: 'https://www.linkedin.com/in/irsad-najib-eka-putra-2479022aa/',
             icon: '💼'
         },
         {
             name: 'Email',
-            url: 'mailto:irsadnajib@example.com',
+            url: 'https://mail.google.com/mail/?view=cm&fs=1&to=irsad.putra270305@gmail.com&su=Hello%20from%20your%20portfolio',
             icon: '📧'
         },
         {
             name: 'Instagram',
-            url: 'https://instagram.com/irsadnajib',
+            url: 'https://www.instagram.com/irsadnajibeka/',
             icon: '📸'
         }
     ];

@@ -1,14 +1,23 @@
 'use client';
 import React, { useEffect, useState, memo, useMemo, useCallback, lazy, Suspense } from 'react';
-import { Space_Grotesk } from 'next/font/google';
+import { Space_Grotesk, Orbitron } from 'next/font/google';
 import dynamic from 'next/dynamic';
-import Image from 'next/image'; // Add this import
+import Image from 'next/image';
+import BackgroundPattern from '@/components/BackgroundPattern';
+import ThemeToggle from '@/components/ThemeToggle';
+
 
 // Lazy load Button component
-const Button = dynamic(() => import('../Button'), {
+const Button = dynamic(() => import('../../components/Button'), {
     ssr: false,
     loading: () => <div className="h-10 w-20 bg-zinc-800 animate-pulse rounded" />
 });
+
+
+const orbitron = Orbitron({
+    subsets: ['latin'],
+    weight: ['700', '800', '900'],
+})
 
 const spaceGrotesk = Space_Grotesk({
     subsets: ['latin'],
@@ -56,8 +65,79 @@ const projectsData = [
         previewLink: "",
         githubLink: "https://github.com/irsad-najib/machine-learning",
         status: "Completed"
+    },
+    {
+        id: 5,
+        title: "Personal Portfolio Website",
+        description: "An interactive portfolio site with modal-based project viewer.",
+        fullDescription: "A clean and professional portfolio website featuring a dynamic project showcase using modal windows. Built with Next.js and Tailwind CSS, this site is SEO-optimized and responsive, perfect for presenting projects to clients and recruiters.",
+        technologies: ["Next.js", "Tailwind CSS", "TypeScript"],
+        previewLink: "https://web-portofolio-irsad-najib.vercel.app",
+        githubLink: "https://github.com/irsad-najib/Portofolio",
+        status: "Completed"
+    },
+    {
+        id: 6,
+        title: "Wi-Fi User Simulation (CLI + Google Colab)",
+        description: "Simulates campus Wi-Fi usage using CLI and Colab notebooks.",
+        fullDescription: "This project models Wi-Fi user behavior on a campus network using CLI scripts and Google Colab. It visualizes user distribution and network load to help analyze system bottlenecks using probability-based simulations.",
+        technologies: ["Python", "Google Colab", "CLI"],
+        previewLink: "",
+        githubLink: "https://github.com/irsad-najib/TPS-project",
+        status: "Completed"
+    },
+    {
+        id: 7,
+        title: "REST API Implementation (web-dev-2)",
+        description: "REST API practice project using Next.js.",
+        fullDescription: "This project is a learning exercise focused on implementing and consuming REST APIs using Next.js. It features modern fetch patterns, modular components, and integration best practices.",
+        technologies: ["Next.js", "REST API"],
+        previewLink: "",
+        githubLink: "https://github.com/irsad-najib/web-dev-2",
+        status: "Completed"
+    },
+    {
+        id: 8,
+        title: "Valentine Website (Fun Project)",
+        description: "A personal and playful Valentine's Day website.",
+        fullDescription: "A small web project made for my girlfriend as a Valentine’s surprise. Built with pure HTML, CSS, and JavaScript, it includes playful animations and romantic UI elements—an example of a fun and lighthearted design experiment.",
+        technologies: ["HTML", "CSS", "JavaScript"],
+        previewLink: "",
+        githubLink: "https://github.com/irsad-najib/valentine",
+        status: "Completed"
+    },
+    {
+        id: 9,
+        title: "Expo SMALSA",
+        description: "Promotional website for college introduction event (unofficial).",
+        fullDescription: "Built with basic HTML and CSS, this website was designed to introduce college departments and student life to high school students at SMALSA. A static promotional site created independently as part of a student initiative.",
+        technologies: ["HTML", "CSS"],
+        previewLink: "",
+        githubLink: "https://github.com/irsad-najib/exposmalsa",
+        status: "Completed"
+    },
+    {
+        id: 10,
+        title: "Hackathon Frontend (Unfinished)",
+        description: "Frontend concept design for a planned hackathon project.",
+        fullDescription: "This project was meant for a hackathon but wasn't completed due to time constraints. It contains initial layout and UI components built with React and Tailwind CSS.",
+        technologies: ["React", "Tailwind CSS"],
+        previewLink: "",
+        githubLink: "https://github.com/irsadNajib/hacketonFE",
+        status: "Not Completed"
+    },
+    {
+        id: 11,
+        title: ".NET MAUI App (Team Project)",
+        description: "A cross-platform app built using .NET MAUI and MongoDB.",
+        fullDescription: "Collaborative team project built with .NET MAUI for both frontend and backend, using MongoDB for database storage. Designed for an Object-Oriented Programming (OOP) course with emphasis on cross-platform structure and modular architecture.",
+        technologies: [".NET MAUI", ".NET", "MongoDB"],
+        previewLink: "",
+        githubLink: "",
+        status: "Completed"
     }
 ];
+
 
 const ProjectCard = memo(({ project, index, isVisible }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -337,19 +417,73 @@ const ProjectCard = memo(({ project, index, isVisible }) => {
 ProjectCard.displayName = 'ProjectCard';
 
 const ProjectsSection = memo(({ isVisible }) => {
-    return (
-        <section className="relative mb-20" id="projects">
-            <div className={`grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 ${spaceGrotesk.className}`}>
-                {projectsData.map((project, index) => (
-                    <ProjectCard
-                        key={project.id}
-                        project={project}
-                        index={index}
-                        isVisible={isVisible}
-                    />
-                ))}
+    const [mounted, setMounted] = useState(false);
+    const [visible, setVisible] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+        // Trigger animation setelah component mount
+        const timer = setTimeout(() => {
+            setVisible(true);
+        }, 100);
+
+        return () => clearTimeout(timer);
+    }, []);
+
+    // Gunakan isVisible prop jika ada, kalau tidak gunakan state lokal
+    const shouldShow = isVisible !== undefined ? isVisible : visible;
+
+    if (!mounted) {
+        // Prevent hydration mismatch
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-slate-900 text-white">
+                <BackgroundPattern />
+                <ThemeToggle />
+                <div className={`container mx-auto px-4 sm:px-6 py-20 relative z-10 ${spaceGrotesk.className}`}>
+                    <h2 className={`${orbitron.className} text-3xl sm:text-4xl font-bold text-cyan-400 mb-6`}>
+                        Projects
+                    </h2>
+                    <p className={`text-slate-300 mb-8 ${spaceGrotesk.className}`}>
+                        Here are some of the projects I have worked on, spanning a variety of technologies and approaches.
+                    </p>
+                    <div className="relative mb-20" id="projects">
+                        <div className={`grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 ${spaceGrotesk.className}`}>
+                            {/* Loading placeholder */}
+                            {Array.from({ length: 4 }).map((_, index) => (
+                                <div key={index} className="max-w-2xl w-full mx-auto h-96 bg-zinc-900/50 animate-pulse rounded-lg" />
+                            ))}
+                        </div>
+                    </div>
+                </div>
             </div>
-        </section>
+        );
+    }
+
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-slate-900 text-white">
+            <BackgroundPattern />
+            <ThemeToggle />
+            <div className={`container mx-auto px-4 sm:px-6 py-20 relative z-10 ${spaceGrotesk.className}`}>
+                <h2 className={`${orbitron.className} text-3xl sm:text-4xl font-bold text-cyan-400 mb-6 transition-all duration-700 ${shouldShow ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                    Projects
+                </h2>
+                <p className={`text-slate-300 mb-8 transition-all duration-700 delay-200 ${shouldShow ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                    Here are some of the projects I have worked on, spanning a variety of technologies and approaches.
+                </p>
+                <div className="relative mb-20" id="projects">
+                    <div className={`grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 ${spaceGrotesk.className}`}>
+                        {projectsData.map((project, index) => (
+                            <ProjectCard
+                                key={project.id}
+                                project={project}
+                                index={index}
+                                isVisible={shouldShow}
+                            />
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
     );
 });
 

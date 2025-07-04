@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import SectionTitle from '../SectionTitle'
 import ProjectCard from './projectCard'
 import Button from '../Button'
+import Link from 'next/link'
 
 export default function Projects() {
     const [isVisible, setIsVisible] = useState(false)
@@ -40,9 +41,12 @@ export default function Projects() {
         >
             <SectionTitle title="PROJECTS" isVisible={isVisible} />
             <ProjectCard isVisible={showCards} />
-            <Button variant="primary" size="medium" className="mt-5">
-                View All Projects
-            </Button>
+            <Link href="/Project">
+                <Button
+                    variant="primary" size="medium" className="mt-5">
+                    View All Projects
+                </Button>
+            </Link>
         </section>
     )
 }

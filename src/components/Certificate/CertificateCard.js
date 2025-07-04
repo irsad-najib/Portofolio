@@ -15,36 +15,28 @@ const orbitron = Orbitron({
 const certificates = [
     {
         id: 1,
-        title: "AWS Certified Solutions Architect",
-        issuer: "Amazon Web Services",
-        date: "2023",
-        image: "/certificates/aws-cert.jpg",
-        description: "Cloud architecture and AWS services expertise"
+        title: "Deep Learning in Python",
+        issuer: "Datacamp",
+        date: "2025",
+        image: "/certificate/datacamp.jpg",
+        description: "Deep learning techniques and applications using Python"
     },
     {
         id: 2,
-        title: "Google Cloud Professional",
-        issuer: "Google Cloud",
-        date: "2023",
-        image: "/certificates/gcp-cert.jpg",
-        description: "Google Cloud Platform services and solutions"
+        title: "Belajar Dasar Pemrograman Web",
+        issuer: "Dicoding Indonesia",
+        date: "2024",
+        image: "/certificate/dicoding.jpg",
+        description: "Fundamentals of web programming including HTML, CSS, and JavaScript"
     },
     {
         id: 3,
-        title: "Meta Frontend Developer",
-        issuer: "Meta",
-        date: "2023",
-        image: "/certificates/meta-cert.jpg",
-        description: "React, JavaScript, and modern web development"
+        title: "Pelatihan WEBDEV 2",
+        issuer: "Divisi Workshop Keluarga Mahasiswa Teknik Elektro dan Teknologi Informasi (KMTETI)",
+        date: "2024",
+        image: "/certificate/KMTETI.jpg",
+        description: "Web development fundamentals and best practices"
     },
-    {
-        id: 4,
-        title: "Microsoft Azure Fundamentals",
-        issuer: "Microsoft",
-        date: "2022",
-        image: "/certificates/azure-cert.jpg",
-        description: "Azure cloud services and fundamentals"
-    }
 ];
 
 const CertificateModal = ({ certificate, isOpen, onClose }) => {
