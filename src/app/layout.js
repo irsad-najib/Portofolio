@@ -29,7 +29,7 @@ export const metadata = {
   title: "Irsad Najib Eka Putra - Fullstack Developer",
   description: "Passionate Information Engineering student specializing in fullstack development and modern web technologies.",
   keywords: "fullstack developer, web development, React, Next.js, Node.js, portfolio",
-  icons: "icon.jpg"
+  icons: "new.jpg"
 };
 
 export default function RootLayout({ children }) {
