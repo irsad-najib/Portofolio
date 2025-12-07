@@ -149,18 +149,6 @@ const projectsData = [
     githubLink: "",
     status: "Completed",
   },
-  {
-    id: 11,
-    id: 10,
-    title: ".NET MAUI App (Team Project)",
-    description: "A cross-platform app built using .NET MAUI and MongoDB.",
-    fullDescription:
-      "Collaborative team project built with .NET MAUI for both frontend and backend, using MongoDB for database storage. Designed for an Object-Oriented Programming (OOP) course with emphasis on cross-platform structure and modular architecture.",
-    technologies: [".NET MAUI", ".NET", "MongoDB"],
-    previewLink: "",
-    githubLink: "",
-    status: "Completed",
-  },
 ];
 
 const ProjectCard = memo(({ project, index, isVisible }) => {
