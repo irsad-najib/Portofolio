@@ -37,6 +37,14 @@ const certificates = [
         image: "/certificate/KMTETI.jpg",
         description: "Web development fundamentals and best practices"
     },
+    {
+        id: 4,
+        title: "Introduction to Network",
+        issuer: "Networking academy by Cisco",
+        date: "2025",
+        image: "/certificate/Netacad.jpg",
+        description: "Fundamentals of networking concepts and technologies"
+    }
 ];
 
 const CertificateModal = ({ certificate, isOpen, onClose }) => {
