@@ -1,22 +1,25 @@
 "use client";
-import { Suspense, lazy } from 'react';
-import Header from '../components/Header/Header';
-import BackgroundPattern from '../components/BackgroundPattern';
-import Loading from '../components/Loading';
+import { Suspense, lazy } from "react";
+import Header from "../components/Header/Header";
+import BackgroundPattern from "../components/BackgroundPattern";
+import Loading from "../components/Loading";
 
 // Lazy load components
-const About = lazy(() => import('../components/About/About'));
-const Skills = lazy(() => import('../components/Skills/Skill'));
-const Projects = lazy(() => import('../components/Projects/Project'));
-const Certificate = lazy(() => import('../components/Certificate/Certificates'));
-const Quote = lazy(() => import('../components/Quote/quote'));
-const Footer = lazy(() => import('../components/Footer/Footer'));
-const Button = lazy(() => import('../components/Button'));
+const About = lazy(() => import("../components/About/About"));
+const Skills = lazy(() => import("../components/Skills/Skill"));
+const Intern = lazy(() => import("../components/Intern/Intern"));
+const Projects = lazy(() => import("../components/Projects/Project"));
+const Certificate = lazy(
+  () => import("../components/Certificate/Certificates"),
+);
+const Quote = lazy(() => import("../components/Quote/quote"));
+const Footer = lazy(() => import("../components/Footer/Footer"));
+const Button = lazy(() => import("../components/Button"));
 
 export default function Home() {
   const openPdf = () => {
-    const pdfUrl = '/resume.pdf';
-    window.open(pdfUrl, '_blank');
+    const pdfUrl = "/resume.pdf";
+    window.open(pdfUrl, "_blank");
   };
 
   return (
@@ -24,7 +27,7 @@ export default function Home() {
       <BackgroundPattern />
 
       {/* Above the fold content - load immediately */}
-      <div id="header" >
+      <div id="header">
         <Header />
       </div>
 
@@ -36,6 +39,10 @@ export default function Home() {
 
         <div id="skills" className="overflow-hidden">
           <Skills />
+        </div>
+
+        <div id="intern" className="overflow-hidden">
+          <Intern />
         </div>
 
         <div id="projects" className="overflow-hidden">
@@ -55,8 +62,7 @@ export default function Home() {
             onClick={openPdf}
             variant="primary"
             size="large"
-            className="shadow-lg hover:shadow-cyan-400/20"
-          >
+            className="shadow-lg hover:shadow-cyan-400/20">
             <span>📄</span>
             Download Resume
           </Button>

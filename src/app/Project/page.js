@@ -36,6 +36,18 @@ const spaceGrotesk = Space_Grotesk({
 const projectsData = [
   {
     id: 1,
+    title: "Frontend Developer - I-perfect for Pupuk Kaltim",
+    description:
+      "Built responsive and scalable internal frontend apps using Next.js and Tailwind.",
+    fullDescription:
+      "08/2025 - Present. Developed responsive and scalable frontend interfaces for internal company applications using Next.js and Tailwind CSS. Integrated API-driven components while collaborating with backend and UI teams to ensure seamless functionality. Maintained clean and reusable component structures to improve code maintainability and development efficiency. Assisted in optimizing frontend performance and ensuring responsive layouts across different devices. Supported feature implementation and bug fixing to improve overall user experience.",
+    technologies: ["Next.js", "Tailwind CSS", "REST API"],
+    previewLink: "",
+    githubLink: "",
+    status: "In Progress",
+  },
+  {
+    id: 2,
     title: "Web Eqariah",
     description:
       "A full-stack platform with comprehensive features using Prisma, JWT, and React Native.",
@@ -47,7 +59,19 @@ const projectsData = [
     status: "In Progress",
   },
   {
-    id: 2,
+    id: 3,
+    title: "Backend / Security Developer - Napscan",
+    description:
+      "Developed a vulnerability scanning backend with Google OAuth and Dockerized deployment.",
+    fullDescription:
+      "01/2026 - 02/2026. Developed a vulnerability scanning system for websites and applications to identify potential security risks. Implemented backend services using Golang to process scanning requests and generate security reports. Integrated Google OAuth authentication to enable secure user login and access control. Containerized the application using Docker to simplify deployment and environment management. Managed deployment and system configuration to ensure stable and scalable execution of the scanning service. Built API endpoints to handle scan requests, result retrieval, and system monitoring.",
+    technologies: ["Go", "Docker", "REST API", "Google OAuth", "Security"],
+    previewLink: "",
+    githubLink: "",
+    status: "Completed",
+  },
+  {
+    id: 4,
     title: "SMA PGRI School Website",
     description:
       "A school website with article submission and Firebase media storage.",
@@ -59,7 +83,7 @@ const projectsData = [
     status: "Completed",
   },
   {
-    id: 3,
+    id: 5,
     title: "Store System",
     description: "A full-stack POS system for retail businesses.",
     fullDescription:
@@ -70,7 +94,7 @@ const projectsData = [
     status: "Completed",
   },
   {
-    id: 4,
+    id: 6,
     title: "Machine Learning – Regression & Classification",
     description:
       "Decision tree experiments for both regression and classification tasks.",
@@ -82,7 +106,7 @@ const projectsData = [
     status: "Completed",
   },
   {
-    id: 5,
+    id: 7,
     title: "Personal Portfolio Website",
     description:
       "An interactive portfolio site with modal-based project viewer.",
@@ -94,7 +118,7 @@ const projectsData = [
     status: "Completed",
   },
   {
-    id: 6,
+    id: 8,
     title: "Wi-Fi User Simulation (CLI + Google Colab)",
     description: "Simulates campus Wi-Fi usage using CLI and Colab notebooks.",
     fullDescription:
@@ -105,7 +129,7 @@ const projectsData = [
     status: "Completed",
   },
   {
-    id: 7,
+    id: 9,
     title: "REST API Implementation (web-dev-2)",
     description: "REST API practice project using Next.js.",
     fullDescription:
@@ -116,7 +140,7 @@ const projectsData = [
     status: "Completed",
   },
   {
-    id: 8,
+    id: 10,
     title: "Expo SMALSA",
     description:
       "Promotional website for college introduction event (unofficial).",
@@ -128,7 +152,7 @@ const projectsData = [
     status: "Completed",
   },
   {
-    id: 9,
+    id: 11,
     title: "Hackathon Frontend (Unfinished)",
     description: "Frontend concept design for a planned hackathon project.",
     fullDescription:
@@ -139,7 +163,7 @@ const projectsData = [
     status: "Not Completed",
   },
   {
-    id: 10,
+    id: 12,
     title: ".NET MAUI App (Team Project)",
     description: "A cross-platform app built using .NET MAUI and MongoDB.",
     fullDescription:
@@ -160,7 +184,7 @@ const ProjectCard = memo(({ project, index, isVisible }) => {
     () => ({
       transitionDelay: `${index * 150}ms`,
     }),
-    [index]
+    [index],
   );
 
   // Memoize callbacks
